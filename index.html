@@ -37,22 +37,22 @@
             border-radius: 5px;
             font-size: 16px;
         }
-        input[type="submit"] {
+        input[type="button"] {
             background-color: #007BFF;
             color: white;
             border: none;
             cursor: pointer;
         }
-        input[type="submit"]:hover {
+        input[type="button"]:hover {
             background-color: #0056b3;
         }
     </style>
 </head>
 <body>
 
-<div class="container">
+<div class="container" id="survey-form">
     <h1>Job Search Survey</h1>
-    <form action="mailto:oreonat10@gmail.com" method="post" enctype="text/plain">
+    <form id="surveyForm">
 
         <!-- Demographic Questions -->
         <label for="name">Full Name:</label>
@@ -114,10 +114,36 @@
         <label for="common-mistakes">What are some common mistakes applicants make during the job search or interview process?</label>
         <textarea id="common-mistakes" name="Common Job Search Mistakes" rows="3" required></textarea>
 
-        <input type="submit" value="Submit Survey">
-
+        <input type="button" value="Download Form Data" onclick="downloadFormData()">
     </form>
 </div>
+
+<script>
+    function downloadFormData() {
+        // Retrieve form data
+        const form = document.getElementById('surveyForm');
+        const formData = new FormData(form);
+        let dataText = '';
+
+        // Append each field in the formData object
+        formData.forEach((value, key) => {
+            dataText += `${key}: ${value}\n\n`;
+        });
+
+        // Create a blob from the form data
+        const blob = new Blob([dataText], { type: 'text/plain' });
+        
+        // Create a link to download the blob as a file
+        const link = document.createElement('a');
+        link.href = URL.createObjectURL(blob);
+        link.download = 'survey_form_data.txt';
+
+        // Append the link to the body, click it, then remove it
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+    }
+</script>
 
 </body>
 </html>
