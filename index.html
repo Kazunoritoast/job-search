@@ -47,6 +47,7 @@
             background-color: #0056b3;
         }
     </style>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 </head>
 <body>
 
@@ -114,34 +115,30 @@
         <label for="common-mistakes">What are some common mistakes applicants make during the job search or interview process?</label>
         <textarea id="common-mistakes" name="Common Job Search Mistakes" rows="3" required></textarea>
 
-        <input type="button" value="Download Form Data" onclick="downloadFormData()">
+        <input type="button" value="Download Form as Image" onclick="downloadFormImage()">
     </form>
 </div>
 
 <script>
-    function downloadFormData() {
-        // Retrieve form data
-        const form = document.getElementById('surveyForm');
-        const formData = new FormData(form);
-        let dataText = '';
+    function downloadFormImage() {
+        // Select the container that you want to capture as an image
+        const surveyForm = document.getElementById('survey-form');
 
-        // Append each field in the formData object
-        formData.forEach((value, key) => {
-            dataText += `${key}: ${value}\n\n`;
+        // Use html2canvas to take a screenshot of the form
+        html2canvas(surveyForm).then(canvas => {
+            // Convert the canvas to a data URL (image)
+            const imgData = canvas.toDataURL('image/png');
+
+            // Create a temporary link element for download
+            const link = document.createElement('a');
+            link.href = imgData;
+            link.download = 'survey_form_image.png';
+
+            // Programmatically click the link to trigger the download
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
         });
-
-        // Create a blob from the form data
-        const blob = new Blob([dataText], { type: 'text/plain' });
-        
-        // Create a link to download the blob as a file
-        const link = document.createElement('a');
-        link.href = URL.createObjectURL(blob);
-        link.download = 'survey_form_data.txt';
-
-        // Append the link to the body, click it, then remove it
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
     }
 </script>
 
